@@ -1,0 +1,9 @@
+# Directories
+.vs/
+.bin/
+scriptsBuildSolution/_pycache_/
+
+# Files
+*.user
+*.vcxproj
+*.sln
