@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <optional>
 #include "Window.h"
+#include "Shader.h"
 
 static const std::vector<const char*> swapchainDeviceExtensions = {
 	VK_KHR_SWAPCHAIN_EXTENSION_NAME
@@ -46,7 +47,13 @@ private:
 	void CreateSurface();
 	void CreateSwapChain();
 	void CreateImageViews();
+	void CreateRenderPass();
 	void CreateGraphicsPipeline();
+	void CreateFramebuffers();
+	void CreateCommandPool();
+	void CreateCommandBuffer();
+	void CreateSyncObjects();
+	void DrawFrame();
 private:
 	void OnWindowClose();
 private:
@@ -57,6 +64,8 @@ private:
 	VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 	VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 	VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+	VkShaderModule CreateShaderModule(const std::vector<char>& code);
+	void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 private:
 	bool m_Running = true;
 
@@ -72,6 +81,16 @@ private:
 	VkFormat m_SwapChainImageFormat;
 	VkExtent2D m_SwapChainExtent;
 	std::vector<VkImageView> m_SwapChainImageViews;
+	VkPipelineLayout m_PipelineLayout;
+	VkRenderPass m_RenderPass;
+	VkPipeline m_GraphicsPipeline;
+	std::vector<VkFramebuffer> m_SwapChainFramebuffers;
+	VkCommandPool m_CommandPool;
+	VkCommandBuffer m_CommandBuffer;
+
+	VkSemaphore m_ImageAvailableSemaphore;
+	VkSemaphore m_RenderFinishedSemaphore;
+	VkFence m_InFlightFence;
 };
 
 

@@ -18,14 +18,34 @@ def ValidateRequiredModule(module):
         InstallModule(module)
 
 glsl_path = os.getenv("Vulkan_SDK") + "/Bin/glslc.exe"
+glsl_validator_path = os.getenv("Vulkan_SDK") + "/Bin/glslangValidator.exe"
+
+def GetFileExtension(fileName):
+    return os.path.splitext(fileName)[1].lstrip(".")
+
+def GetFileNameWithoutExtension(fileName):
+    return os.path.splitext(fileName)[0]
+
+def GetFileDirectory(fileName):
+    return os.path.dirname(fileName)
 
 def CompileShaders(shaderPaths):
     for shaderPath in shaderPaths:
-        CompileShader(shaderPath, shaderPath + ".spv")
+        CompileShader(shaderPath)
 
-def CompileShader(shader_path, output_path):
+def CompileShader(shader_path):
+    fileDir = GetFileDirectory(shader_path)
+    fileName = os.path.basename(shader_path)
+    extension = GetFileExtension(fileName)
+    fileNameWithoutExtension = GetFileNameWithoutExtension(fileName)
+    switcher = {
+        "vert": "_vert.spv",
+        "frag": "_frag.spv",
+        "comp": "_comp.spv",
+    }
     print("Compiling shader: " + shader_path)
-    subprocess.run([glsl_path, shader_path, "-o", output_path])
+    subprocess.run([glsl_path, shader_path, "-o", fileDir + "/" + fileNameWithoutExtension + switcher.get(extension)])
+    #subprocess.run([glsl_validator_path, "-V", shader_path, "-o", fileDir + "/" + fileNameWithoutExtension + switcher.get(extension)])
 
 def ChooseShader():
     root = tk.Tk()
