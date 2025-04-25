@@ -17,10 +17,15 @@ workspace "VulkanPractice"
         cppdialect "C++17"
         targetdir "bin/%{cfg.buildcfg}"
         objdir "bin/obj/%{cfg.buildcfg}"
-        files 
-        { 
+        pchheader "pch.h"
+        pchsource "src/pch.cpp"
+        files { 
             "src/**.h", 
             "src/**.cpp" 
+        }
+
+        includedirs {
+            "src/", "vendor/"
         }
 
         IncludeDependencies()
